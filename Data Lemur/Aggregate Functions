@@ -1,0 +1,60 @@
+pharmacy_sales Table:
+Column Name	    Type
+product_id	    integer
+units_sold	    integer
+total_sales	    decimal
+cogs	          decimal
+manufacturer	  varchar
+drug	          varchar
+
+Sample stock_prices Input:
+date	                ticker	  open	    high	  low	    close
+01/01/2020 00:00:00	  GOOG	    67.08	    75.16	  67.08	  71.71
+01/01/2020 00:00:00	  NFLX	    326.10	  359.85	321.20	345.09
+01/01/2020 00:00:00	  AAPL	    74.06	    81.96	  73.19	  77.38
+01/01/2020 00:00:00	  AMZN	    93.75	    102.79	90.77	  100.44
+01/01/2020 00:00:00  	MSFT	    158.78	  174.05	156.51	170.23
+
+TASK 1
+Output the number of rows in the pharmacy_sales table.
+
+SELECT COUNT(*)
+FROM pharmacy_sales;
+
+_______________________
+
+TASK 2
+Output the total number of drugs manufactured by Pfizer, and output the total sales for all the Pfizer drugs.
+
+SELECT COUNT (*) AS count
+, SUM (total_sales) AS total_sales
+FROM pharmacy_sales
+WHERE manufacturer = 'Pfizer';
+
+
+_______________________
+
+TASK 3
+Write a SQL query using AVG to find the average open price for Google stock (which has a stock ticker symbol of 'GOOG').
+
+SELECT AVG(open)
+FROM stock_prices
+WHERE ticker = 'GOOG';
+
+_______________________
+
+TASK 4
+Use SQL's MIN command in this practice exercise, to find the lowest Microsoft stock (MSFT) ever opened at.
+
+SELECT MIN(open) 
+FROM stock_prices
+WHERE ticker = 'MSFT';
+
+_______________________
+
+TASK 5
+Use SQL's MAX command in this practice exercise, to find the highest Netflix stock (NFLX) ever opened at.
+
+SELECT MAX(open) 
+FROM stock_prices
+WHERE ticker = 'NFLX';
