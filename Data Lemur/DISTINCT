@@ -1,0 +1,17 @@
+Assume you're given a table containing data on Amazon customers and their spending on products in different category. 
+Write a query using COUNT DISTINCT to identify the number of unique products within each product category.
+
+product_spend Table:
+Column Name	      Type
+category	        string
+product	          string
+user_id	          integer
+spend	            decimal
+transaction_date	timestamp
+
+SELECT 
+  category
+  , COUNT(DISTINCT product) AS count
+FROM product_spend
+GROUP BY category;
+
