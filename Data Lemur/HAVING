@@ -1,0 +1,33 @@
+Use SQL's HAVING & MIN commands to find all FAANG stocks whose open share price was always greater than $100.
+
+stock_prices Example Input:
+date	              ticker	open	  high	  low	    close
+01/31/2020 00:00:00	GOOG	  67.08	  75.16	  67.08	  71.71
+01/31/2020 00:00:00	META	  206.75	224.20	201.06	201.91
+01/31/2020 00:00:00	MSFT	  158.78	174.05	156.51	170.23
+01/31/2020 00:00:00	AMZN	  93.75	  102.79	90.77	  100.44
+01/31/2020 00:00:00	NFLX	  326.10	359.85	321.20	345.09
+
+SELECT 
+  ticker
+  , MIN(open) AS min
+FROM stock_prices
+GROUP BY 1
+HAVING MIN(open) > 100;
+
+_________________________________________
+
+TASK 2
+Given a table of candidates and their technical skills, list the candidate IDs of candidates who have more than 2 technical skills.
+
+candidates Table:
+Column Name	  Type
+candidate_id	integer
+skill	        varchar
+
+SELECT candidate_id
+FROM candidates
+GROUP BY candidate_id
+HAVING COUNT (skill) > 2;
+
+
