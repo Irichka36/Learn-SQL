@@ -1,0 +1,68 @@
+TASK 1 
+CVS Health is trying to better understand its pharmacy sales, and how well different products are selling. Each drug can only be produced by one manufacturer.
+Write a query to find the top 3 most profitable drugs sold, and how much profit they made. Assume that there are no ties in the profits. Display the result from the highest to the lowest total profit.
+
+Definition:
+cogs stands for Cost of Goods Sold which is the direct cost associated with producing the drug.
+Total Profit = Total Sales - Cost of Goods Sold
+
+pharmacy_sales Table:
+Column Name	    Type
+product_id	    integer
+units_sold	    integer
+total_sales	    decimal
+cogs	          decimal
+manufacturer	  varchar
+drug	          varchar
+
+SELECT 
+  drug
+  , total_sales - cogs AS totalprofit
+FROM pharmacy_sales
+ORDER BY 2 DESC
+LIMIT 3;
+
+__________________________________________________
+
+TASK 2
+
+Your team at JPMorgan Chase is preparing to launch a new credit card, and to gain some insights, you're analyzing how many credit cards were issued each month.
+Write a query that outputs the name of each credit card and the difference in the number of issued cards between the month with the highest issuance cards and the lowest issuance. Arrange the results based on the largest disparity.
+
+monthly_cards_issued Table:
+Column Name	    Type
+card_name	      string
+issued_amount	  integer
+issue_month	    integer
+issue_year	    integer
+
+SELECT 
+  card_name
+  , MAX(issued_amount) - MIN(issued_amount) AS difference
+FROM monthly_cards_issued
+GROUP BY card_name
+ORDER BY 2 DESC;
+
+__________________________________________________
+
+TASK 3
+
+Display the stocks which had "big-mover months", and how many of those months they had. Order your results from the stocks with the most, to least, "big-mover months".
+What is a big-mover month?
+A "big-mover month" is when a stock closes up or down by greater than 10% compared to the price it opened at.
+For example, when COVID hit and e-commerce became the new normal, Amazon stock in April 2020 had a big-mover month because the price shot up from $96.65 per share at open to $123.70 at close – a 28% increase!
+
+ticker	date	                open	  close	    percent_change
+AMZN	  04/01/2020 00:00:00	  96.65	  123.70	  28.0
+NFLX	  04/01/2022 00:00:00	  376.80	190.36	  -49.5
+
+Netflix stock had a big-mover month in April 2022 in the reverse direction. That month, Netflix reported that the company lost 200k subscribers in Q1, and expected to lose another two million subs in Q2. 
+In Apr'22, Netflix stock opened that month at $376.80 per share, but closed at $190.36, representing a 49.5% loss – yikes!
+
+SELECT 
+  ticker
+  , COUNT (ticker) AS count
+FROM stock_prices
+WHERE (close-open)/open > 0.1 OR (close-open)/open < -0.1
+GROUP BY ticker
+ORDER BY 2 DESC;
