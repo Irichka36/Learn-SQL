@@ -1,0 +1,24 @@
+Assume you're given a table containing job postings from various companies on the LinkedIn platform. Write a query to retrieve the count of companies that have posted duplicate job listings.
+Definition: Duplicate job listings are defined as two job listings within the same company that share identical titles and descriptions.
+
+job_listings Table:
+Column Name	    Type
+job_id	        integer
+company_id	    integer
+title	          string
+description	    string
+
+WITH cte AS( -- создает промежуточную таблицу, где перечислены все компании, которые создавали дублирующие объявления. Проверка осуществляется по двум столбцам.
+  SELECT
+    company_id
+    , COUNT (title)
+    , COUNT (description)
+  FROM job_listings
+  GROUP BY 1
+  HAVING 
+    COUNT (title) > 1 
+    AND COUNT (description) > 1
+)
+SELECT COUNT (*) AS dublicate_companies -- Подсчитывает количество компаний
+FROM cte;
+
