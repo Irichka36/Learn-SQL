@@ -1,0 +1,32 @@
+As a data analyst on the Oracle Sales Operations team, you are given a list of salespeople’s deals, and the annual quota they need to hit.
+Write a query that outputs each employee id and whether they hit the quota or not ('yes' or 'no'). Order the results by employee id in ascending order.
+
+Definitions:
+deal_size: Deals acquired by a salesperson in the year. Each salesperson may have more than 1 deal.
+quota: Total annual quota for each salesperson.
+
+deals Table:
+Column Name	      Type
+employee_id	      integer
+deal_size	        integer
+
+sales_quotas Table:
+Column Name	      Type
+employee_id	      integer
+quota	            integer
+
+
+WITH employee_result AS (
+  SELECT 
+    d.employee_id
+    , sq.quota
+    , SUM(deal_size) AS sum_deal
+  FROM deals d
+  JOIN sales_quotas sq ON d.employee_id = sq.employee_id
+  GROUP BY 1,2
+) 
+SELECT 
+  employee_id
+  , CASE WHEN sum_deal >= quota THEN 'yes' ELSE 'no' END
+FROM employee_result
+ORDER BY employee_id ASC;
