@@ -1,0 +1,45 @@
+The Bloomberg terminal is the go-to resource for financial professionals, offering convenient access to a wide array of financial datasets. 
+As a Data Analyst at Bloomberg, you have access to historical data on stock performance.
+Currently, you're analyzing the highest and lowest open prices for each FAANG stock by month over the years.
+For each FAANG stock, display the ticker symbol, the month and year ('Mon-YYYY') with the corresponding highest and lowest open prices (refer to the Example Output format). 
+Ensure that the results are sorted by ticker symbol.
+
+stock_prices Schema:
+Column Name	      Type	      Description
+date	            datetime	  The specified date (mm/dd/yyyy) of the stock data.
+ticker	          varchar	    The stock ticker symbol (e.g., AAPL) for the corresponding company.
+open	            decimal	    The opening price of the stock at the start of the trading day.
+high	            decimal	    The highest price reached by the stock during the trading day.
+low	              decimal	    The lowest price reached by the stock during the trading day.
+close	            decimal	    The closing price of the stock at the end of the trading day.
+
+ WITH highest_prices AS ( 
+    SELECT 
+      ticker
+      , TO_CHAR(date, 'Mon-YYYY') AS highest_mth
+      , MAX(open) AS highest_open
+      , ROW_NUMBER () OVER (PARTITION BY ticker ORDER BY open DESC) AS highest_row
+    FROM stock_prices
+    GROUP BY 1,2,open
+  )
+  , lowest_prices AS (
+  SELECT 
+      ticker
+      , TO_CHAR(date, 'Mon-YYYY') AS lowest_mth
+      , MIN(open) AS lowest_open
+      , ROW_NUMBER () OVER (PARTITION BY ticker ORDER BY open ASC) AS lowest_row
+    FROM stock_prices
+    GROUP BY 1,2,open
+  )
+  SELECT 
+    highest.ticker AS ticker
+    , highest.highest_mth
+    , highest.highest_open
+    , lowest.lowest_mth
+    , lowest.lowest_open
+  FROM highest_prices AS highest
+  JOIN lowest_prices AS lowest 
+    ON highest.ticker = lowest.ticker
+    AND highest.highest_row = 1
+    AND lowest.lowest_row = 1
+  ORDER BY 1 ASC;
