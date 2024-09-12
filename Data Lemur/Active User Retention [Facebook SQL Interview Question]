@@ -1,0 +1,43 @@
+Assume you're given a table containing information on Facebook user actions. Write a query to obtain number of monthly active users (MAUs) in July 2022, including the month in numerical format "1, 2, 3".
+
+Hint:
+An active user is defined as a user who has performed actions such as 'sign-in', 'like', or 'comment' in both the current month and the previous month.
+
+user_actions Table:
+Column Name	  Type
+user_id	      integer
+event_id	    integer
+event_type	  string ("sign-in, "like", "comment")
+event_date	  datetime
+
+WITH active_users_june AS (
+  SELECT 
+    DISTINCT user_id
+    , EXTRACT(MONTH FROM event_date) AS month
+  FROM user_actions
+  WHERE 
+    (event_type = 'sign-in'
+    OR event_type = 'like'
+    OR event_type = 'comment')
+    AND EXTRACT(MONTH FROM event_date) = 06
+  GROUP BY 1,2
+)
+, active_users_july AS (
+  SELECT 
+    DISTINCT user_id
+    , EXTRACT(MONTH FROM event_date) AS month
+  FROM user_actions
+  WHERE 
+    (event_type = 'sign-in'
+    OR event_type = 'like'
+    OR event_type = 'comment')
+    AND EXTRACT(MONTH FROM event_date) = 07
+  GROUP BY 1,2
+)
+
+SELECT 
+  aujl.month
+  , COUNT (*) AS monthly_active_users
+FROM active_users_july AS aujl
+JOIN active_users_june AS aujn ON aujl.user_id = aujn.user_id
+GROUP BY 1;
