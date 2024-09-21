@@ -1,0 +1,34 @@
+You’re a consultant for a major pizza chain that will be running a promotion where all 3-topping pizzas will be sold for a fixed price, and are trying to understand the costs involved.
+Given a list of pizza toppings, consider all the possible 3-topping pizzas, and print out the total cost of those 3 toppings. 
+Sort the results with the highest total cost on the top followed by pizza toppings in ascending order.
+
+Break ties by listing the ingredients in alphabetical order, starting from the first ingredient, followed by the second and third.
+P.S. Be careful with the spacing (or lack of) between each ingredient. Refer to our Example Output.
+
+Notes:
+Do not display pizzas where a topping is repeated. For example, ‘Pepperoni,Pepperoni,Onion Pizza’.
+Ingredients must be listed in alphabetical order. For example, 'Chicken,Onions,Sausage'. 'Onion,Sausage,Chicken' is not acceptable.
+
+pizza_toppings Table:
+Column Name	    Type
+topping_name	  varchar(255)
+ingredient_cost	decimal(10,2)
+
+WITH cte AS (
+SELECT 
+  t1.topping_name AS topping1
+  , t1.ingredient_cost AS cost1
+  , t2.topping_name AS topping2
+  , t2.ingredient_cost AS cost2
+  , t3.topping_name AS topping3
+  , t3.ingredient_cost AS cost3
+FROM pizza_toppings AS t1 
+JOIN pizza_toppings AS t2 ON t1.topping_name < t2.topping_name
+JOIN pizza_toppings AS t3 ON t2.topping_name < t3.topping_name
+ORDER BY 1,3,5 ASC
+)
+SELECT 
+  CONCAT(topping1, ',' ,topping2, ',' , topping3) AS pizza
+  ,cost1 + cost2 + cost3 AS total_cost
+FROM cte
+ORDER BY 2 DESC,1;
